@@ -80,6 +80,17 @@ fun MainMenu(navController: NavController? = null) {
             ) {
                 Text("Scrolling", fontSize = 16.sp)
             }
+            val openAlertDialog = remember { mutableStateOf(false) }
+            OutlinedButton(
+                onClick = { openAlertDialog.value = true },
+                Modifier.fillMaxWidth()
+            ) {
+                Text("Alert Dialog", fontSize = 16.sp)
+            }
+
+            if (openAlertDialog.value) {
+                TestAlertDialog(onDismiss = { openAlertDialog.value = false })
+            }
         }
     }
 }
@@ -266,12 +277,44 @@ fun ScrollingGridScreen(navController: NavController? = null) {
                 cells = GridCells.Fixed(5)
             ) {
                 for (i in 0..100) {
-                    item { Text("Item $i",
-                        Modifier
-                            .fillMaxWidth()
-                            .height(90.dp)) }
+                    item {
+                        Text(
+                            "Item $i",
+                            Modifier
+                                .fillMaxWidth()
+                                .height(90.dp)
+                        )
+                    }
                 }
             }
         }
     }
+}
+
+@Composable
+fun TestAlertDialog(onDismiss: () -> Unit = {}) {
+    AlertDialog(
+        onDismissRequest = {
+            onDismiss()
+        },
+        buttons = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    onClick = {
+                        onDismiss()
+                    }) {
+                    Text("Close")
+                }
+            }
+        },
+        title = {
+            Text("Alert Dialog")
+        },
+        text = {
+            Text("This is an alert dialog.")
+        }
+    )
 }
