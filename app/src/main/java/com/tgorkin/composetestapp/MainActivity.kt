@@ -1,5 +1,7 @@
 package com.tgorkin.composetestapp
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,9 +15,13 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -27,6 +33,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.tgorkin.composetestapp.ui.theme.ComposeTestAppTheme
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,17 +56,20 @@ fun ComposeTestApp() {
             composable("main_menu") {
                 MainMenu(navController)
             }
-            composable("input") {
+            composable("basic_input") {
                 BasicInputScreen(navController)
             }
-            composable("scrolling_menu") {
-                ScrollingMenuScreen(navController)
+            composable("lists_menu") {
+                ListsMenuScreen(navController)
             }
-            composable("scrolling_list") {
+            composable("list_column") {
                 ScrollingListScreen(navController)
             }
-            composable("scrolling_grid") {
+            composable("list_grid") {
                 ScrollingGridScreen(navController)
+            }
+            composable("date_time_pickers") {
+                DateTimePickerScreen(navController)
             }
         }
     }
@@ -68,18 +80,23 @@ fun ComposeTestApp() {
 fun MainMenu(navController: NavController? = null) {
     Surface(color = MaterialTheme.colors.background) {
         Column {
+            // Basic Input
             OutlinedButton(
-                onClick = { navController?.navigate("input") },
+                onClick = { navController?.navigate("basic_input") },
                 Modifier.fillMaxWidth()
             ) {
-                Text("Input", fontSize = 16.sp)
+                Text("Basic Input", fontSize = 16.sp)
             }
+
+            // Scrolling
             OutlinedButton(
-                onClick = { navController?.navigate("scrolling_menu") },
+                onClick = { navController?.navigate("lists_menu") },
                 Modifier.fillMaxWidth()
             ) {
-                Text("Scrolling", fontSize = 16.sp)
+                Text("Lists and Grids", fontSize = 16.sp)
             }
+
+            // Alert Dialog
             val openAlertDialog = remember { mutableStateOf(false) }
             OutlinedButton(
                 onClick = { openAlertDialog.value = true },
@@ -87,9 +104,16 @@ fun MainMenu(navController: NavController? = null) {
             ) {
                 Text("Alert Dialog", fontSize = 16.sp)
             }
-
             if (openAlertDialog.value) {
                 TestAlertDialog(onDismiss = { openAlertDialog.value = false })
+            }
+
+            // Date Picker
+            OutlinedButton(
+                onClick = { navController?.navigate("date_time_pickers") },
+                Modifier.fillMaxWidth()
+            ) {
+                Text("Date & Time Pickers", fontSize = 16.sp)
             }
         }
     }
@@ -118,7 +142,7 @@ fun ScreenTitleWithNav(title: String, navController: NavController?) {
 fun BasicInputScreen(navController: NavController? = null) {
     Surface(color = MaterialTheme.colors.background) {
         Column {
-            ScreenTitleWithNav("Basic Input Controls", navController)
+            ScreenTitleWithNav("Basic Input", navController)
             val listState = rememberLazyListState()
             LazyColumn(
                 modifier = Modifier.padding(16.dp),
@@ -223,18 +247,18 @@ fun BasicInputScreen(navController: NavController? = null) {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun ScrollingMenuScreen(navController: NavController? = null) {
+fun ListsMenuScreen(navController: NavController? = null) {
     Surface(color = MaterialTheme.colors.background) {
         Column {
-            ScreenTitleWithNav("Scrollable Containers", navController)
+            ScreenTitleWithNav("Lists and Grids", navController)
             OutlinedButton(
-                onClick = { navController?.navigate("scrolling_list") },
+                onClick = { navController?.navigate("list_column") },
                 Modifier.fillMaxWidth()
             ) {
-                Text("Vertical List", fontSize = 16.sp)
+                Text("Column", fontSize = 16.sp)
             }
             OutlinedButton(
-                onClick = { navController?.navigate("scrolling_grid") },
+                onClick = { navController?.navigate("list_grid") },
                 Modifier.fillMaxWidth()
             ) {
                 Text("Grid", fontSize = 16.sp)
@@ -248,7 +272,7 @@ fun ScrollingMenuScreen(navController: NavController? = null) {
 fun ScrollingListScreen(navController: NavController? = null) {
     Surface(color = MaterialTheme.colors.background) {
         Column {
-            ScreenTitleWithNav("Vertical List", navController)
+            ScreenTitleWithNav("Column", navController)
             val listState = rememberLazyListState()
             LazyColumn(
                 modifier = Modifier.padding(16.dp),
@@ -317,4 +341,66 @@ fun TestAlertDialog(onDismiss: () -> Unit = {}) {
             Text("This is an alert dialog.")
         }
     )
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun DateTimePickerScreen(navController: NavController? = null) {
+    Surface(color = MaterialTheme.colors.background) {
+        Column {
+            ScreenTitleWithNav("Date & Time Pickers", navController)
+
+            Column(modifier = Modifier.padding(8.dp)) {
+                Text(
+                    "Jetpack Compose currently does not have built in support for " +
+                            "Date & Time Picker components.  The following pickers are implemented " +
+                            "using Android Views widgets.", fontStyle = FontStyle.Italic
+                )
+                Divider(modifier = Modifier.padding(6.dp))
+
+                // Time Picker
+                val timePickerData = remember { mutableStateOf(LocalTime.of(12, 0)) }
+                val timePickerDialog = TimePickerDialog(
+                    LocalContext.current,
+                    { _, hour: Int, minute: Int ->
+                        timePickerData.value = LocalTime.of(hour, minute)
+                    }, timePickerData.value.hour, timePickerData.value.minute, false
+                )
+
+                Text("Time Picker", fontSize = 16.sp)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        timePickerData.value.format(DateTimeFormatter.ofPattern("hh:mm a")),
+                        Modifier.defaultMinSize(minWidth = 40.dp)
+                    )
+                    IconButton(onClick = { timePickerDialog.show() }) {
+                        Icon(Icons.Default.DateRange, contentDescription = "Time Picker")
+                    }
+                }
+
+                // Date Picker
+                val datePickerData = remember { mutableStateOf(LocalDate.of(1970, 1, 1)) }
+                val datePickerDialog = DatePickerDialog(
+                    LocalContext.current,
+                    { _, year: Int, month: Int, day: Int ->
+                        datePickerData.value = LocalDate.of(year, month + 1, day)
+                    },
+                    datePickerData.value.year,
+                    datePickerData.value.month.value - 1,
+                    datePickerData.value.dayOfMonth
+                )
+
+                Text("Date Picker", fontSize = 16.sp)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        datePickerData.value.format(DateTimeFormatter.ISO_DATE),
+                        Modifier.defaultMinSize(minWidth = 40.dp)
+                    )
+                    IconButton(onClick = { datePickerDialog.show() }) {
+                        Icon(Icons.Default.DateRange, contentDescription = "Date Picker")
+                    }
+                }
+            }
+        }
+    }
 }
