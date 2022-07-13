@@ -26,8 +26,11 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -35,6 +38,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -73,6 +77,9 @@ fun ComposeTestApp() {
             composable("basic_input") {
                 BasicInputScreen(navController)
             }
+            composable("text") {
+                TextScreen(navController)
+            }
             composable("lists_menu") {
                 ListsMenuScreen(navController)
             }
@@ -102,7 +109,15 @@ fun MainMenu(navController: NavController? = null) {
                 Text("Basic Input", fontSize = 16.sp)
             }
 
-            // Scrolling
+            // Text
+            OutlinedButton(
+                onClick = { navController?.navigate("text") },
+                Modifier.fillMaxWidth()
+            ) {
+                Text("Text", fontSize = 16.sp)
+            }
+
+            // Lists and Grids
             OutlinedButton(
                 onClick = { navController?.navigate("lists_menu") },
                 Modifier.fillMaxWidth()
@@ -163,12 +178,6 @@ fun BasicInputScreen(navController: NavController? = null) {
                 state = listState,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                item {
-                    Text("Clickable Text", Modifier.clickable(onClick = {}))
-                }
-                item {
-                    SelectionContainer { Text("Selectable Text") }
-                }
                 item {
                     var text by remember { mutableStateOf("") }
                     TextField(
@@ -255,6 +264,36 @@ fun BasicInputScreen(navController: NavController? = null) {
                     }
                 }
             }
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun TextScreen(navController: NavController? = null) {
+    Surface(color = MaterialTheme.colors.background) {
+        Column (
+            modifier = Modifier
+                .padding(8.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+
+        ){
+            val loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
+                    "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+                    " Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris" +
+                    " nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in " +
+                    "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla " +
+                    "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in " +
+                    "culpa qui officia deserunt mollit anim id est laborum.\n\n"
+
+            ScreenTitleWithNav("Text", navController)
+            Text("Basic Text", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Text(loremIpsum)
+            Text("Clickable Text", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            ClickableText(text = AnnotatedString(loremIpsum), onClick = {})
+            Text("Selectable Text", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            SelectionContainer { Text(loremIpsum.repeat(7)) }
         }
     }
 }
