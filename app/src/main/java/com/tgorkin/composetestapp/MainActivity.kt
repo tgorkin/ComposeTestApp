@@ -19,7 +19,6 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -304,7 +303,6 @@ fun ScrollingListScreen(navController: NavController? = null) {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 fun ScrollingGridScreen(navController: NavController? = null) {
     Surface(color = MaterialTheme.colors.background) {
         Column {
