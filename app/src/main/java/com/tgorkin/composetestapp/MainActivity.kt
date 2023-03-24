@@ -19,7 +19,6 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -183,7 +182,17 @@ fun BasicInputScreen(navController: NavController? = null) {
                     TextField(
                         value = text,
                         onValueChange = { text = it },
-                        label = { Text("Text Field") }
+                        label = { Text("Text Field") },
+                        singleLine = true
+                    )
+                }
+                item {
+                    var text by remember { mutableStateOf("") }
+                    TextField(
+                        value = text,
+                        onValueChange = { text = it },
+                        label = { Text("Multiline Text Field") },
+                        maxLines = 3
                     )
                 }
                 item {
