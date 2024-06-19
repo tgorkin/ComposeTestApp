@@ -30,7 +30,7 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.*
@@ -98,51 +98,49 @@ fun ComposeTestApp() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun MainMenu(navController: NavController? = null) {
-    Surface(color = MaterialTheme.colors.background) {
-        Column {
-            // Basic Input
-            OutlinedButton(
-                onClick = { navController?.navigate("basic_input") },
-                Modifier.fillMaxWidth()
-            ) {
-                Text("Basic Input", fontSize = 16.sp)
-            }
+    Column {
+        // Basic Input
+        OutlinedButton(
+            onClick = { navController?.navigate("basic_input") },
+            Modifier.fillMaxWidth()
+        ) {
+            Text("Basic Input", fontSize = 16.sp)
+        }
 
-            // Text
-            OutlinedButton(
-                onClick = { navController?.navigate("text") },
-                Modifier.fillMaxWidth()
-            ) {
-                Text("Text", fontSize = 16.sp)
-            }
+        // Text
+        OutlinedButton(
+            onClick = { navController?.navigate("text") },
+            Modifier.fillMaxWidth()
+        ) {
+            Text("Text", fontSize = 16.sp)
+        }
 
-            // Lists and Grids
-            OutlinedButton(
-                onClick = { navController?.navigate("lists_menu") },
-                Modifier.fillMaxWidth()
-            ) {
-                Text("Lists and Grids", fontSize = 16.sp)
-            }
+        // Lists and Grids
+        OutlinedButton(
+            onClick = { navController?.navigate("lists_menu") },
+            Modifier.fillMaxWidth()
+        ) {
+            Text("Lists and Grids", fontSize = 16.sp)
+        }
 
-            // Alert Dialog
-            val openAlertDialog = remember { mutableStateOf(false) }
-            OutlinedButton(
-                onClick = { openAlertDialog.value = true },
-                Modifier.fillMaxWidth()
-            ) {
-                Text("Alert Dialog", fontSize = 16.sp)
-            }
-            if (openAlertDialog.value) {
-                TestAlertDialog(onDismiss = { openAlertDialog.value = false })
-            }
+        // Alert Dialog
+        val openAlertDialog = remember { mutableStateOf(false) }
+        OutlinedButton(
+            onClick = { openAlertDialog.value = true },
+            Modifier.fillMaxWidth()
+        ) {
+            Text("Alert Dialog", fontSize = 16.sp)
+        }
+        if (openAlertDialog.value) {
+            TestAlertDialog(onDismiss = { openAlertDialog.value = false })
+        }
 
-            // Date Picker
-            OutlinedButton(
-                onClick = { navController?.navigate("date_time_pickers") },
-                Modifier.fillMaxWidth()
-            ) {
-                Text("Date & Time Pickers", fontSize = 16.sp)
-            }
+        // Date Picker
+        OutlinedButton(
+            onClick = { navController?.navigate("date_time_pickers") },
+            Modifier.fillMaxWidth()
+        ) {
+            Text("Date & Time Pickers", fontSize = 16.sp)
         }
     }
 }
@@ -168,109 +166,107 @@ fun ScreenTitleWithNav(title: String, navController: NavController?) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun BasicInputScreen(navController: NavController? = null) {
-    Surface(color = MaterialTheme.colors.background) {
-        Column {
-            ScreenTitleWithNav("Basic Input", navController)
-            val listState = rememberLazyListState()
-            LazyColumn(
-                modifier = Modifier.padding(16.dp),
-                state = listState,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                item {
-                    var text by remember { mutableStateOf("") }
-                    TextField(
-                        value = text,
-                        onValueChange = { text = it },
-                        label = { Text("Text Field") },
-                        singleLine = true
-                    )
+    Column {
+        ScreenTitleWithNav("Basic Input", navController)
+        val listState = rememberLazyListState()
+        LazyColumn(
+            modifier = Modifier.padding(16.dp),
+            state = listState,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            item {
+                var text by remember { mutableStateOf("") }
+                TextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    label = { Text("Text Field") },
+                    singleLine = true
+                )
+            }
+            item {
+                var text by remember { mutableStateOf("") }
+                TextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    label = { Text("Multiline Text Field") },
+                    maxLines = 3
+                )
+            }
+            item {
+                var password by remember { mutableStateOf("") }
+                TextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Password Text Field") },
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                )
+            }
+            item {
+                var text by remember { mutableStateOf("") }
+                OutlinedTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    label = { Text("Outlined Text Field") }
+                )
+            }
+            item {
+                Button(onClick = { }) {
+                    Text("Button")
                 }
-                item {
-                    var text by remember { mutableStateOf("") }
-                    TextField(
-                        value = text,
-                        onValueChange = { text = it },
-                        label = { Text("Multiline Text Field") },
-                        maxLines = 3
-                    )
+            }
+            item {
+                TextButton(onClick = { }) {
+                    Text("Text Button")
                 }
-                item {
-                    var password by remember { mutableStateOf("") }
-                    TextField(
-                        value = password,
-                        onValueChange = { password = it },
-                        label = { Text("Password Text Field") },
-                        visualTransformation = PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-                    )
+            }
+            item {
+                OutlinedButton(onClick = { }) {
+                    Text("Outlined Button")
                 }
-                item {
-                    var text by remember { mutableStateOf("") }
-                    OutlinedTextField(
-                        value = text,
-                        onValueChange = { text = it },
-                        label = { Text("Outlined Text Field") }
-                    )
+            }
+            item {
+                Button(onClick = { }, enabled = false) {
+                    Text("Disabled Button")
                 }
-                item {
-                    Button(onClick = { }) {
-                        Text("Button")
-                    }
+            }
+            item {
+                Row {
+                    Text("Checkbox")
+                    Spacer(modifier = Modifier.size(4.dp))
+                    var checked by remember { mutableStateOf(false) }
+                    Checkbox(checked = checked, onCheckedChange = { checked = !checked })
                 }
-                item {
-                    TextButton(onClick = { }) {
-                        Text("Text Button")
-                    }
+            }
+            item {
+                Row {
+                    Text("Switch")
+                    Spacer(modifier = Modifier.size(4.dp))
+                    var switched by remember { mutableStateOf(false) }
+                    Switch(checked = switched, onCheckedChange = { switched = !switched })
                 }
-                item {
-                    OutlinedButton(onClick = { }) {
-                        Text("Outlined Button")
-                    }
+            }
+            item {
+                Row {
+                    Text("Radio Button")
+                    Spacer(modifier = Modifier.size(4.dp))
+                    var checked by remember { mutableStateOf(false) }
+                    RadioButton(selected = checked, onClick = { checked = !checked })
                 }
-                item {
-                    Button(onClick = { }, enabled = false) {
-                        Text("Disabled Button")
-                    }
-                }
-                item {
-                    Row {
-                        Text("Checkbox")
-                        Spacer(modifier = Modifier.size(4.dp))
-                        var checked by remember { mutableStateOf(false) }
-                        Checkbox(checked = checked, onCheckedChange = { checked = !checked })
-                    }
-                }
-                item {
-                    Row {
-                        Text("Switch")
-                        Spacer(modifier = Modifier.size(4.dp))
-                        var switched by remember { mutableStateOf(false) }
-                        Switch(checked = switched, onCheckedChange = { switched = !switched })
-                    }
-                }
-                item {
-                    Row {
-                        Text("Radio Button")
-                        Spacer(modifier = Modifier.size(4.dp))
-                        var checked by remember { mutableStateOf(false) }
-                        RadioButton(selected = checked, onClick = { checked = !checked })
-                    }
-                }
+            }
 
-                item {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("Slider")
-                        Spacer(modifier = Modifier.size(4.dp))
-                        var sliderState by remember { mutableStateOf(0f) }
-                        Slider(value = sliderState, modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                            onValueChange = { newValue ->
-                                sliderState = newValue
-                            }
-                        )
-                    }
+            item {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Slider")
+                    Spacer(modifier = Modifier.size(4.dp))
+                    var sliderState by remember { mutableFloatStateOf(0f) }
+                    Slider(value = sliderState, modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                        onValueChange = { newValue ->
+                            sliderState = newValue
+                        }
+                    )
                 }
             }
         }
@@ -280,51 +276,47 @@ fun BasicInputScreen(navController: NavController? = null) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun TextScreen(navController: NavController? = null) {
-    Surface(color = MaterialTheme.colors.background) {
-        Column (
-            modifier = Modifier
-                .padding(8.dp)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+    Column(
+        modifier = Modifier
+            .padding(8.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
 
-        ){
-            val loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
-                    "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
-                    " Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris" +
-                    " nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in " +
-                    "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla " +
-                    "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in " +
-                    "culpa qui officia deserunt mollit anim id est laborum.\n\n"
+        ) {
+        val loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
+                "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+                " Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris" +
+                " nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in " +
+                "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla " +
+                "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in " +
+                "culpa qui officia deserunt mollit anim id est laborum.\n\n"
 
-            ScreenTitleWithNav("Text", navController)
-            Text("Basic Text", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-            Text(loremIpsum)
-            Text("Clickable Text", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-            ClickableText(text = AnnotatedString(loremIpsum), onClick = {})
-            Text("Selectable Text", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-            SelectionContainer { Text(loremIpsum.repeat(7)) }
-        }
+        ScreenTitleWithNav("Text", navController)
+        Text("Basic Text", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+        Text(loremIpsum)
+        Text("Clickable Text", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+        ClickableText(text = AnnotatedString(loremIpsum), onClick = {})
+        Text("Selectable Text", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+        SelectionContainer { Text(loremIpsum.repeat(7)) }
     }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun ListsMenuScreen(navController: NavController? = null) {
-    Surface(color = MaterialTheme.colors.background) {
-        Column {
-            ScreenTitleWithNav("Lists and Grids", navController)
-            OutlinedButton(
-                onClick = { navController?.navigate("list_column") },
-                Modifier.fillMaxWidth()
-            ) {
-                Text("Column", fontSize = 16.sp)
-            }
-            OutlinedButton(
-                onClick = { navController?.navigate("list_grid") },
-                Modifier.fillMaxWidth()
-            ) {
-                Text("Grid", fontSize = 16.sp)
-            }
+    Column {
+        ScreenTitleWithNav("Lists and Grids", navController)
+        OutlinedButton(
+            onClick = { navController?.navigate("list_column") },
+            Modifier.fillMaxWidth()
+        ) {
+            Text("Column", fontSize = 16.sp)
+        }
+        OutlinedButton(
+            onClick = { navController?.navigate("list_grid") },
+            Modifier.fillMaxWidth()
+        ) {
+            Text("Grid", fontSize = 16.sp)
         }
     }
 }
@@ -332,18 +324,16 @@ fun ListsMenuScreen(navController: NavController? = null) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun ScrollingListScreen(navController: NavController? = null) {
-    Surface(color = MaterialTheme.colors.background) {
-        Column {
-            ScreenTitleWithNav("Column", navController)
-            val listState = rememberLazyListState()
-            LazyColumn(
-                modifier = Modifier.padding(16.dp),
-                state = listState,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                for (i in 0..50) {
-                    item { Text("Item $i", Modifier.fillMaxWidth()) }
-                }
+    Column {
+        ScreenTitleWithNav("Column", navController)
+        val listState = rememberLazyListState()
+        LazyColumn(
+            modifier = Modifier.padding(16.dp),
+            state = listState,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            for (i in 0..50) {
+                item { Text("Item $i", Modifier.fillMaxWidth()) }
             }
         }
     }
@@ -352,114 +342,111 @@ fun ScrollingListScreen(navController: NavController? = null) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun ScrollingGridScreen(navController: NavController? = null) {
-    Surface(color = MaterialTheme.colors.background) {
-        Column {
-            ScreenTitleWithNav("Vertical Grid", navController)
-            val listState = rememberLazyGridState()
-            LazyVerticalGrid(
-                modifier = Modifier.padding(16.dp),
-                state = listState,
-                columns = GridCells.Fixed(5)
-            ) {
-                for (i in 0..100) {
-                    item {
-                        Text(
-                            "Item $i",
-                            Modifier
-                                .fillMaxWidth()
-                                .height(90.dp)
-                        )
-                    }
+    Column {
+        ScreenTitleWithNav("Vertical Grid", navController)
+        val listState = rememberLazyGridState()
+        LazyVerticalGrid(
+            modifier = Modifier.padding(16.dp),
+            state = listState,
+            columns = GridCells.Fixed(5)
+        ) {
+            for (i in 0..100) {
+                item {
+                    Text(
+                        "Item $i",
+                        Modifier
+                            .fillMaxWidth()
+                            .height(90.dp)
+                    )
                 }
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TestAlertDialog(onDismiss: () -> Unit = {}) {
-    AlertDialog(
-        onDismissRequest = {
-            onDismiss()
-        },
-        buttons = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Button(
-                    onClick = {
-                        onDismiss()
-                    }) {
-                    Text("Close")
+    BasicAlertDialog(
+        onDismissRequest = onDismiss
+    ) {
+        Surface(
+            modifier = Modifier.wrapContentWidth().wrapContentHeight(),
+            shape = MaterialTheme.shapes.large,
+            tonalElevation = AlertDialogDefaults.TonalElevation
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text =
+                    "This area typically contains the supportive text " +
+                            "which presents the details regarding the Dialog's purpose.",
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+                TextButton(
+                    onClick = onDismiss,
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    Text("Confirm")
                 }
             }
-        },
-        title = {
-            Text("Alert Dialog")
-        },
-        text = {
-            Text("This is an alert dialog.")
         }
-    )
+    }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun DateTimePickerScreen(navController: NavController? = null) {
-    Surface(color = MaterialTheme.colors.background) {
-        Column {
-            ScreenTitleWithNav("Date & Time Pickers", navController)
+    Column {
+        ScreenTitleWithNav("Date & Time Pickers", navController)
 
-            Column(modifier = Modifier.padding(8.dp)) {
+        Column(modifier = Modifier.padding(8.dp)) {
+            Text(
+                "Jetpack Compose currently does not have built in support for " +
+                        "Date & Time Picker components.  The following pickers are implemented " +
+                        "using Android Views widgets.", fontStyle = FontStyle.Italic
+            )
+            HorizontalDivider(modifier = Modifier.padding(6.dp))
+
+            // Time Picker
+            val timePickerData = remember { mutableStateOf(LocalTime.of(12, 0)) }
+            val timePickerDialog = TimePickerDialog(
+                LocalContext.current,
+                { _, hour: Int, minute: Int ->
+                    timePickerData.value = LocalTime.of(hour, minute)
+                }, timePickerData.value.hour, timePickerData.value.minute, false
+            )
+
+            Text("Time Picker", fontSize = 16.sp)
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    "Jetpack Compose currently does not have built in support for " +
-                            "Date & Time Picker components.  The following pickers are implemented " +
-                            "using Android Views widgets.", fontStyle = FontStyle.Italic
+                    timePickerData.value.format(DateTimeFormatter.ofPattern("hh:mm a")),
+                    Modifier.defaultMinSize(minWidth = 40.dp)
                 )
-                Divider(modifier = Modifier.padding(6.dp))
-
-                // Time Picker
-                val timePickerData = remember { mutableStateOf(LocalTime.of(12, 0)) }
-                val timePickerDialog = TimePickerDialog(
-                    LocalContext.current,
-                    { _, hour: Int, minute: Int ->
-                        timePickerData.value = LocalTime.of(hour, minute)
-                    }, timePickerData.value.hour, timePickerData.value.minute, false
-                )
-
-                Text("Time Picker", fontSize = 16.sp)
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        timePickerData.value.format(DateTimeFormatter.ofPattern("hh:mm a")),
-                        Modifier.defaultMinSize(minWidth = 40.dp)
-                    )
-                    IconButton(onClick = { timePickerDialog.show() }) {
-                        Icon(Icons.Default.DateRange, contentDescription = "Time Picker")
-                    }
+                IconButton(onClick = { timePickerDialog.show() }) {
+                    Icon(Icons.Default.DateRange, contentDescription = "Time Picker")
                 }
+            }
 
-                // Date Picker
-                val datePickerData = remember { mutableStateOf(LocalDate.of(1970, 1, 1)) }
-                val datePickerDialog = DatePickerDialog(
-                    LocalContext.current,
-                    { _, year: Int, month: Int, day: Int ->
-                        datePickerData.value = LocalDate.of(year, month + 1, day)
-                    },
-                    datePickerData.value.year,
-                    datePickerData.value.month.value - 1,
-                    datePickerData.value.dayOfMonth
+            // Date Picker
+            val datePickerData = remember { mutableStateOf(LocalDate.of(1970, 1, 1)) }
+            val datePickerDialog = DatePickerDialog(
+                LocalContext.current,
+                { _, year: Int, month: Int, day: Int ->
+                    datePickerData.value = LocalDate.of(year, month + 1, day)
+                },
+                datePickerData.value.year,
+                datePickerData.value.month.value - 1,
+                datePickerData.value.dayOfMonth
+            )
+
+            Text("Date Picker", fontSize = 16.sp)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    datePickerData.value.format(DateTimeFormatter.ISO_DATE),
+                    Modifier.defaultMinSize(minWidth = 40.dp)
                 )
-
-                Text("Date Picker", fontSize = 16.sp)
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        datePickerData.value.format(DateTimeFormatter.ISO_DATE),
-                        Modifier.defaultMinSize(minWidth = 40.dp)
-                    )
-                    IconButton(onClick = { datePickerDialog.show() }) {
-                        Icon(Icons.Default.DateRange, contentDescription = "Date Picker")
-                    }
+                IconButton(onClick = { datePickerDialog.show() }) {
+                    Icon(Icons.Default.DateRange, contentDescription = "Date Picker")
                 }
             }
         }
